@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div>
-      <NavBar></NavBar>
+      <NavBarT></NavBarT>
     </div>
     <div class="content">
       <div>
@@ -12,18 +12,21 @@
 </template>
 
 <script setup>
-import NavBar from '../components/NavBar.vue'
+import NavBarT from '../components/NavBarT.vue'
 </script>
 
 <style scoped>
 .container {
   display: flex;
   flex-direction: column;
+  margin: auto;
 }
 
 .content {
   display: flex;
+  align-self: center;
   flex: 1;
-  flex-direction: row;
+  /* flex-direction: row; */
+  margin-top: 50px;
 }
 </style>
