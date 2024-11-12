@@ -22,7 +22,7 @@
       </thead>
       <tbody>
         <tr
-          v-for="(customer, index) in customers"
+          v-for="(customer, index) in customersStore.customers"
           :key="index"
           class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
         >
@@ -128,50 +128,59 @@
 </template>
 
 <script setup>
-const customers = [
-  {
-    firstName: 'Mousito',
-    lastName: 'Maggio',
-    city: 'Ushuaia',
-    birthdate: '18/11/2007',
-  },
-  {
-    firstName: 'Lucas',
-    lastName: 'Maggio',
-    city: 'Ushuaia',
-    birthdate: '18/11/1986',
-  },
-  {
-    firstName: 'Mousito',
-    lastName: 'Maggio',
-    city: 'Ushuaia',
-    birthdate: '18/11/2007',
-  },
-  {
-    firstName: 'Lucas',
-    lastName: 'Maggio',
-    city: 'Ushuaia',
-    birthdate: '18/11/1986',
-  },
-  {
-    firstName: 'Mousito',
-    lastName: 'Maggio',
-    city: 'Ushuaia',
-    birthdate: '18/11/2007',
-  },
-  {
-    firstName: 'Lucas',
-    lastName: 'Maggio',
-    city: 'Ushuaia',
-    birthdate: '18/11/1986',
-  },
-  {
-    firstName: 'Mousito',
-    lastName: 'Maggio',
-    city: 'Ushuaia',
-    birthdate: '18/11/2007',
-  },
-]
+// const customers = [
+//   {
+//     firstName: 'Mousito',
+//     lastName: 'Maggio',
+//     city: 'Ushuaia',
+//     birthdate: '18/11/2007',
+//   },
+//   {
+//     firstName: 'Lucas',
+//     lastName: 'Maggio',
+//     city: 'Ushuaia',
+//     birthdate: '18/11/1986',
+//   },
+//   {
+//     firstName: 'Mousito',
+//     lastName: 'Maggio',
+//     city: 'Ushuaia',
+//     birthdate: '18/11/2007',
+//   },
+//   {
+//     firstName: 'Lucas',
+//     lastName: 'Maggio',
+//     city: 'Ushuaia',
+//     birthdate: '18/11/1986',
+//   },
+//   {
+//     firstName: 'Mousito',
+//     lastName: 'Maggio',
+//     city: 'Ushuaia',
+//     birthdate: '18/11/2007',
+//   },
+//   {
+//     firstName: 'Lucas',
+//     lastName: 'Maggio',
+//     city: 'Ushuaia',
+//     birthdate: '18/11/1986',
+//   },
+//   {
+//     firstName: 'Mousito',
+//     lastName: 'Maggio',
+//     city: 'Ushuaia',
+//     birthdate: '18/11/2007',
+//   },
+// ]
+import { useCustomers } from '@/composables/useCustomers'
+import { onMounted } from 'vue'
+import { useCustomersStore } from '@/stores/customersStore'
+
+const customersStore = useCustomersStore()
+
+onMounted(() => {
+  useCustomers()
+})
 
 const editCustomer = (index) => {
   console.log('edit: ' + index)
