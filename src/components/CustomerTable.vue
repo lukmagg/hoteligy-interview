@@ -98,7 +98,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="customer in customersStore.customers" :key="customer.id">
+          <tr v-for="customer in customers" :key="customer.id">
             <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">
               {{ customer.firstName }}
             </td>
@@ -129,17 +129,12 @@
 </template>
 
 <script setup>
-import { useCustomers } from '@/composables/useCustomers'
-import { onMounted } from 'vue'
+import { useCrud } from '@/composables/useCrud'
+import { onMounted, computed } from 'vue'
 import { useCustomersStore } from '@/stores/customersStore'
 import { DataTable } from 'simple-datatables'
 
-const customersStore = useCustomersStore()
-
-onMounted(async () => {
-  // Get customers
-  await useCustomers()
-
+function initTable() {
   // Init data table
   const table = document.getElementById('default-table')
 
@@ -152,30 +147,42 @@ onMounted(async () => {
 
   // Edit button list
   const editButtons = document.querySelectorAll('button[data-edit-id]')
-
   editButtons.forEach((element) => {
     element.addEventListener('click', (event) => {
       const customerId = event.target.getAttribute('data-edit-id')
-      console.log(`Edit button clicked for user ID: ${customerId}`)
+      editCustomer(customerId)
     })
   })
 
-  // Edit button list
+  // Delete button list
   const deleteButtons = document.querySelectorAll('button[data-delete-id]')
-
   deleteButtons.forEach((element) => {
     element.addEventListener('click', (event) => {
       const customerId = event.target.getAttribute('data-delete-id')
-      console.log(`Delete button clicked for user ID: ${customerId}`)
+
+      deleteCustomer(customerId)
     })
   })
+}
+const customersStore = useCustomersStore()
+const { get, remove } = useCrud()
+
+const customers = computed(() => customersStore.customers)
+
+onMounted(async () => {
+  // Get customers
+  //await useCustomers()
+  await get()
+  initTable()
 })
 
 const editCustomer = (id) => {
   console.log('edit: ' + id)
 }
 
-const deleteCustomer = (id) => {
-  console.log('delete: ' + id)
+const deleteCustomer = async (id) => {
+  // remove customer
+  await remove(id)
+  await get()
 }
 </script>

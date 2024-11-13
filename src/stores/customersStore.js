@@ -2,11 +2,19 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useCustomersStore = defineStore('customers', () => {
-  const customers = ref([])
+  let customers = ref([])
 
   function setCustomers(newCustomers) {
-    customers.value = newCustomers
+    customers.value.splice(0, customers.value.length, ...newCustomers)
   }
 
-  return { customers, setCustomers }
+  function deleteCustomer(id) {
+    const index = customers.value.findIndex((customer) => customer.id == id)
+
+    if (index !== -1) {
+      customers.value.splice(index, 1)
+    }
+  }
+
+  return { customers, setCustomers, deleteCustomer }
 })
