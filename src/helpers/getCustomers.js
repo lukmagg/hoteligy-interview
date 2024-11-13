@@ -18,3 +18,19 @@ export const getCustomers = async () => {
 
   return customers
 }
+
+export const deleteCustomer = async (id) => {
+  try {
+    const response = await axios.post(`${API_URL}/${id}`, {
+      headers: {
+        Authorization: `Bearer 91612a4c-a65e-49ce-a4fa-598950436b0c`,
+      },
+    })
+
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    console.error('Error deleting customer: ', error)
+    throw error
+  }
+}
