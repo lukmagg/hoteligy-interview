@@ -1,7 +1,7 @@
 <template>
-  <CustomerTable />
+  <CustomerTableT />
 </template>
 
 <script setup>
-import CustomerTable from '@/components/CustomerTable.vue'
+import CustomerTableT from '@/components/CustomerTableT.vue'
 </script>

@@ -6,7 +6,7 @@
           <tr>
             <th>
               <span class="flex items-center">
-                First Name
+                First Namexx
                 <svg
                   class="w-4 h-4 ms-1"
                   aria-hidden="true"
@@ -107,7 +107,7 @@
             <td>{{ customer.birthday }}</td>
             <td class="flex flex-col">
               <button
-                @click="() => editCustomer(customer.id)"
+                @click="() => editCustomer(customer.firstLast)"
                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                 :data-edit-id="customer.id"
               >
@@ -126,6 +126,7 @@
       </table>
     </div>
   </div>
+  <div v-show="isLoading">Loading...</div>
 </template>
 
 <script setup>
@@ -134,7 +135,9 @@ import { ref, onMounted, computed } from 'vue'
 import { useCustomersStore } from '@/stores/customersStore'
 import { DataTable } from 'simple-datatables'
 import { toast } from 'vue3-toastify'
+import { useRouter } from 'vue-router'
 
+const router = useRouter()
 // data
 const isLoading = ref(true)
 
@@ -144,22 +147,25 @@ const customersStore = useCustomersStore()
 //composables
 const { get, remove } = useCustomersCrud()
 
-// funcions
+// computed properties
+const customers = computed(() => customersStore.customers)
+
 const notify = () => {
   toast.success('Customer deleted successfully !', {
     position: toast.POSITION.TOP_CENTER,
   })
 }
 function initTable() {
-  // Init data table
-  const table = document.getElementById('default-table')
-
-  if (table) {
-    new DataTable(table, {
-      searchable: false,
-      perPageSelect: false,
-    })
-  }
+  new DataTable('#default-table', {
+    paging: true, // enable or disable paginatione
+    perPage: 8, // set the number of rows per page
+    perPageSelect: [8, 20, 50], // set the number of rows per page options
+    firstLast: true, // enable or disable the first and last buttons
+    nextPrev: true, // enable or disable the next and previous buttons
+    searchable: true, // enable or disable searching
+    sensitivity: 'base', // set the search sensitivity (base, accent, case, variant)
+    searchQuerySeparator: ' ', // set the search query separator
+  })
 
   // Edit button list
   const editButtons = document.querySelectorAll('button[data-edit-id]')
@@ -182,20 +188,18 @@ function initTable() {
 }
 
 const editCustomer = (id) => {
-  console.log('edit: ' + id)
+  router.push({ name: 'customersEdit', params: { id } })
 }
+
 const deleteCustomer = async (id) => {
-  // remove customer
   await remove(id)
   notify()
 }
 
-// computed properties
-const customers = computed(() => customersStore.customers)
-
 // lifecycle
 onMounted(async () => {
   await get()
+  // El problema esta al hacer initTable porque pierde la reactividad
   initTable()
   isLoading.value = false
 })

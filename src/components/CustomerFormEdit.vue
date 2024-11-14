@@ -58,25 +58,42 @@
       Submit
     </button>
   </form>
+  <button @click="clearForm">clearForm</button>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import VueTailwindDatepicker from 'vue-tailwind-datepicker'
 import { useCustomersCrud } from '@/composables/useCustomersCrud'
 import { toast } from 'vue3-toastify'
 
-const { create } = useCustomersCrud()
+const { update } = useCustomersCrud()
+
+// props
+const props = defineProps(['customer'])
 
 // data
+const customerId = ref(0)
 const firstName = ref('')
 const lastName = ref('')
 const city = ref('')
 const birthday = ref([])
 
+watch(
+  () => props.customer,
+  () => {
+    customerId.value = props.customer.customerId
+    firstName.value = props.customer.firstName
+    lastName.value = props.customer.lastName
+    city.value = props.customer.city
+    birthday.value = props.customer.birthday
+  },
+  { deep: true },
+)
+
 // functions
 const notify = () => {
-  toast.success('Customer created successfully !', {
+  toast.success('Customer updated successfully !', {
     position: toast.POSITION.TOP_CENTER,
   })
 }
@@ -89,11 +106,11 @@ const clearForm = () => {
 
 const onSubmit = async () => {
   try {
-    await create({
+    await update(customerId.value, {
       firstName: firstName.value,
       lastName: lastName.value,
       city: city.value,
-      birthday: birthday.value[0],
+      birthday: birthday.value,
     })
     notify()
     clearForm()
