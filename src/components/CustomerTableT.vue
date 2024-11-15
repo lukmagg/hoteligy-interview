@@ -1,12 +1,34 @@
 <template>
   <div class="overflow-x-auto" v-show="!isLoading">
     <div class="min-w-full">
-      <table id="default-table">
+      <table id="sorting-table">
         <thead>
           <tr>
             <th>
               <span class="flex items-center">
-                First Namexx
+                ID
+                <svg
+                  class="w-4 h-4 ms-1"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="m8 15 4 4 4-4m0-6-4-4-4 4"
+                  />
+                </svg>
+              </span>
+            </th>
+            <th>
+              <span class="flex items-center">
+                First Name
                 <svg
                   class="w-4 h-4 ms-1"
                   aria-hidden="true"
@@ -72,7 +94,7 @@
             </th>
             <th data-type="date" data-format="YYYY/DD/MM">
               <span class="flex items-center">
-                Birthday
+                birthday
                 <svg
                   class="w-4 h-4 ms-1"
                   aria-hidden="true"
@@ -97,8 +119,9 @@
             </th>
           </tr>
         </thead>
-        <tbody>
-          <tr v-for="customer in customers" :key="customer.id">
+        <tbody :key="renderKey">
+          <tr v-for="customer in customersStore.customers" :key="customer.id">
+            <td>{{ customer.id }}</td>
             <td class="font-medium text-gray-900 whitespace-nowrap dark:text-white">
               {{ customer.firstName }}
             </td>
@@ -107,7 +130,7 @@
             <td>{{ customer.birthday }}</td>
             <td class="flex flex-col">
               <button
-                @click="() => editCustomer(customer.firstLast)"
+                @click="() => editCustomer(customer.id)"
                 class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                 :data-edit-id="customer.id"
               >
@@ -131,15 +154,18 @@
 
 <script setup>
 import { useCustomersCrud } from '@/composables/useCustomersCrud'
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useCustomersStore } from '@/stores/customersStore'
 import { DataTable } from 'simple-datatables'
 import { toast } from 'vue3-toastify'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+
 // data
 const isLoading = ref(true)
+const myTable = ref(null)
+const renderKey = ref(0)
 
 // store
 const customersStore = useCustomersStore()
@@ -147,26 +173,21 @@ const customersStore = useCustomersStore()
 //composables
 const { get, remove } = useCustomersCrud()
 
-// computed properties
-const customers = computed(() => customersStore.customers)
-
 const notify = () => {
   toast.success('Customer deleted successfully !', {
-    position: toast.POSITION.TOP_CENTER,
+    position: toast.POSITION.BOTTOM_CENTER,
   })
 }
-function initTable() {
-  new DataTable('#default-table', {
-    paging: true, // enable or disable paginatione
-    perPage: 8, // set the number of rows per page
-    perPageSelect: [8, 20, 50], // set the number of rows per page options
-    firstLast: true, // enable or disable the first and last buttons
-    nextPrev: true, // enable or disable the next and previous buttons
-    searchable: true, // enable or disable searching
+
+async function initTable() {
+  await get()
+
+  myTable.value = new DataTable('#sorting-table', {
+    searchable: false, // enable or disable searching
     sensitivity: 'base', // set the search sensitivity (base, accent, case, variant)
     searchQuerySeparator: ' ', // set the search query separator
+    paging: false,
   })
-
   // Edit button list
   const editButtons = document.querySelectorAll('button[data-edit-id]')
   editButtons.forEach((element) => {
@@ -185,11 +206,20 @@ function initTable() {
       deleteCustomer(customerId)
     })
   })
+  isLoading.value = false
 }
 
 const editCustomer = (id) => {
   router.push({ name: 'customersEdit', params: { id } })
 }
+
+watch(
+  () => customersStore.customers,
+  () => {
+    renderKey.value++
+  },
+  { deep: true },
+)
 
 const deleteCustomer = async (id) => {
   await remove(id)
@@ -198,9 +228,6 @@ const deleteCustomer = async (id) => {
 
 // lifecycle
 onMounted(async () => {
-  await get()
-  // El problema esta al hacer initTable porque pierde la reactividad
   initTable()
-  isLoading.value = false
 })
 </script>

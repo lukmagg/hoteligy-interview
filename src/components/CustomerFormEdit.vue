@@ -1,4 +1,7 @@
 <template>
+  <div>
+    <p>Update</p>
+  </div>
   <form class="max-w-md mx-auto" @submit.prevent="onSubmit">
     <div class="relative z-0 w-full mb-5 group">
       <input
@@ -58,11 +61,10 @@
       Submit
     </button>
   </form>
-  <button @click="clearForm">clearForm</button>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import VueTailwindDatepicker from 'vue-tailwind-datepicker'
 import { useCustomersCrud } from '@/composables/useCustomersCrud'
 import { toast } from 'vue3-toastify'
@@ -79,6 +81,10 @@ const lastName = ref('')
 const city = ref('')
 const birthday = ref([])
 
+// onMounted(() => {
+//   console.log(props.customer)
+// })
+
 watch(
   () => props.customer,
   () => {
@@ -94,14 +100,8 @@ watch(
 // functions
 const notify = () => {
   toast.success('Customer updated successfully !', {
-    position: toast.POSITION.TOP_CENTER,
+    position: toast.POSITION.BOTTOM_CENTER,
   })
-}
-const clearForm = () => {
-  firstName.value = ''
-  lastName.value = ''
-  city.value = ''
-  birthday.value = []
 }
 
 const onSubmit = async () => {
@@ -110,10 +110,9 @@ const onSubmit = async () => {
       firstName: firstName.value,
       lastName: lastName.value,
       city: city.value,
-      birthday: birthday.value,
+      birthday: birthday.value.slice(0, 10), // use slice for delete hours
     })
     notify()
-    clearForm()
   } catch (error) {
     console.log(error)
   }

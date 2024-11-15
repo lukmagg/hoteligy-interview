@@ -1,4 +1,7 @@
 <template>
+  <div>
+    <p>Add new</p>
+  </div>
   <form class="max-w-md mx-auto" @submit.prevent="onSubmit">
     <div class="relative z-0 w-full mb-5 group">
       <input
@@ -77,7 +80,7 @@ const birthday = ref([])
 // functions
 const notify = () => {
   toast.success('Customer created successfully !', {
-    position: toast.POSITION.TOP_CENTER,
+    position: toast.POSITION.BOTTOM_CENTER,
   })
 }
 const clearForm = () => {

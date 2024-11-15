@@ -4,7 +4,7 @@
 
 <script setup>
 import CustomerFormEdit from '@/components/CustomerFormEdit.vue'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useCustomersStore } from '@/stores/customersStore'
 
@@ -22,12 +22,14 @@ const birthday = ref('')
 const customerId = ref(0)
 
 onMounted(() => {
-  // get customer id
   const id = route.params.id
+
+  console.log(id)
 
   // get customer from store with this id
   const customer = customersStore.customers.filter((c) => c.id == id)[0]
 
+  console.log(customer)
   firstName.value = customer.firstName
   lastName.value = customer.lastName
   city.value = customer.city
