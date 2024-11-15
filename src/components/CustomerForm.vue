@@ -83,6 +83,13 @@ const notify = () => {
     position: toast.POSITION.BOTTOM_CENTER,
   })
 }
+
+const notifyError = () => {
+  toast.error('Birthday is required', {
+    position: toast.POSITION.BOTTOM_CENTER,
+  })
+}
+
 const clearForm = () => {
   firstName.value = ''
   lastName.value = ''
@@ -91,17 +98,21 @@ const clearForm = () => {
 }
 
 const onSubmit = async () => {
-  try {
-    await create({
-      firstName: firstName.value,
-      lastName: lastName.value,
-      city: city.value,
-      birthday: birthday.value[0],
-    })
-    notify()
-    clearForm()
-  } catch (error) {
-    console.log(error)
+  if (birthday.value.length === 0) {
+    notifyError()
+  } else {
+    try {
+      await create({
+        firstName: firstName.value,
+        lastName: lastName.value,
+        city: city.value,
+        birthday: birthday.value[0],
+      })
+      notify()
+      clearForm()
+    } catch (error) {
+      console.error(error)
+    }
   }
 }
 </script>

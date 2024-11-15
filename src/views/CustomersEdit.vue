@@ -24,12 +24,9 @@ const customerId = ref(0)
 onMounted(() => {
   const id = route.params.id
 
-  console.log(id)
-
   // get customer from store with this id
   const customer = customersStore.customers.filter((c) => c.id == id)[0]
 
-  console.log(customer)
   firstName.value = customer.firstName
   lastName.value = customer.lastName
   city.value = customer.city

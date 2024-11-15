@@ -81,10 +81,6 @@ const lastName = ref('')
 const city = ref('')
 const birthday = ref([])
 
-// onMounted(() => {
-//   console.log(props.customer)
-// })
-
 watch(
   () => props.customer,
   () => {
@@ -114,7 +110,7 @@ const onSubmit = async () => {
     })
     notify()
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
 </script>
