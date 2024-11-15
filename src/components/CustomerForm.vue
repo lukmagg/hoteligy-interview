@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>Add new</p>
+    <p>Add customer</p>
   </div>
   <form class="max-w-md mx-auto" @submit.prevent="onSubmit">
     <div class="relative z-0 w-full mb-5 group">

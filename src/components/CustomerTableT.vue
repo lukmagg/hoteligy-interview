@@ -4,7 +4,7 @@
       <table id="sorting-table">
         <thead>
           <tr>
-            <th>
+            <th @click="sort()">
               <span class="flex items-center">
                 ID
                 <svg
@@ -26,7 +26,7 @@
                 </svg>
               </span>
             </th>
-            <th>
+            <th @click="sort()">
               <span class="flex items-center">
                 First Name
                 <svg
@@ -48,7 +48,7 @@
                 </svg>
               </span>
             </th>
-            <th>
+            <th @click="sort()">
               <span class="flex items-center">
                 Last Name
                 <svg
@@ -70,7 +70,7 @@
                 </svg>
               </span>
             </th>
-            <th>
+            <th @click="sort()">
               <span class="flex items-center">
                 City
                 <svg
@@ -166,6 +166,7 @@ const router = useRouter()
 const isLoading = ref(true)
 const myTable = ref(null)
 const renderKey = ref(0)
+const forceRender = ref(false)
 
 // store
 const customersStore = useCustomersStore()
@@ -196,7 +197,6 @@ async function initTable() {
       editCustomer(customerId)
     })
   })
-
   // Delete button list
   const deleteButtons = document.querySelectorAll('button[data-delete-id]')
   deleteButtons.forEach((element) => {
@@ -216,14 +216,20 @@ const editCustomer = (id) => {
 watch(
   () => customersStore.customers,
   () => {
-    renderKey.value++
+    if (forceRender.value) renderKey.value++
   },
   { deep: true },
 )
 
+const sort = () => {
+  initTable()
+}
+
 const deleteCustomer = async (id) => {
+  forceRender.value = true
   await remove(id)
   notify()
+  forceRender.value = false
 }
 
 // lifecycle

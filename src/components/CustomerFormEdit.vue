@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <p>Update</p>
+  <div class="mb-2">
+    <p>Update customer</p>
   </div>
   <form class="max-w-md mx-auto" @submit.prevent="onSubmit">
     <div class="relative z-0 w-full mb-5 group">
