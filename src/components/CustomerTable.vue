@@ -4,7 +4,7 @@
       <table id="sorting-table">
         <thead>
           <tr>
-            <th @click="sort()">
+            <th @click="initTable()">
               <span class="flex items-center">
                 ID
                 <svg
@@ -26,7 +26,7 @@
                 </svg>
               </span>
             </th>
-            <th @click="sort()">
+            <th @click="initTable()">
               <span class="flex items-center">
                 First Name
                 <svg
@@ -48,7 +48,7 @@
                 </svg>
               </span>
             </th>
-            <th @click="sort()">
+            <th @click="initTable()">
               <span class="flex items-center">
                 Last Name
                 <svg
@@ -70,7 +70,7 @@
                 </svg>
               </span>
             </th>
-            <th @click="sort()">
+            <th @click="initTable()">
               <span class="flex items-center">
                 City
                 <svg
@@ -220,10 +220,6 @@ watch(
   },
   { deep: true },
 )
-
-const sort = () => {
-  initTable()
-}
 
 const deleteCustomer = async (id) => {
   forceRender.value = true
