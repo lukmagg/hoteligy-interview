@@ -33,3 +33,5 @@ npm run build
 ```sh
 npm run lint
 ```
+
+Important! Is necesary make .env file, you can see .env.example

@@ -2,11 +2,13 @@ import axios from 'axios'
 
 const API_URL = 'https://frontend-interview-backend.hoteligy.dev/customers'
 
+const token = import.meta.env.VITE_API_TOKEN
+
 export const getCustomers = async () => {
   try {
     const response = await axios.get(API_URL, {
       headers: {
-        Authorization: `Bearer 91612a4c-a65e-49ce-a4fa-598950436b0c`,
+        Authorization: `Bearer ${token}`,
       },
     })
     const customers = response.data
@@ -22,7 +24,7 @@ export const deleteCustomer = async (id) => {
   try {
     const response = await axios.delete(`${API_URL}/${id}`, {
       headers: {
-        Authorization: `Bearer 91612a4c-a65e-49ce-a4fa-598950436b0c`,
+        Authorization: `Bearer ${token}`,
       },
     })
 
@@ -37,7 +39,7 @@ export const createCustomer = async (newCustomer) => {
   try {
     const response = await axios.post(API_URL, newCustomer, {
       headers: {
-        Authorization: `Bearer 91612a4c-a65e-49ce-a4fa-598950436b0c`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     })
@@ -53,7 +55,7 @@ export const updateCustomer = async (id, customer) => {
   try {
     const response = await axios.put(`${API_URL}/${id}`, customer, {
       headers: {
-        Authorization: `Bearer 91612a4c-a65e-49ce-a4fa-598950436b0c`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
     })
