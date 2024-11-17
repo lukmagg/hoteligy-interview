@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>Add customer</p>
+    <p>{{ customersStore.editMode ? 'Edit' : 'Create' }} customer</p>
   </div>
   <form class="max-w-md mx-auto" @submit.prevent="onSubmit">
     <div class="relative z-0 w-full mb-5 group">
@@ -52,7 +52,15 @@
       >
     </div>
 
-    <vue-tailwind-datepicker v-model="birthday" as-single />
+    <div>
+      <VueDatePicker
+        v-model="birthday"
+        :inline="{ input: true }"
+        text-input
+        auto-apply
+        :enable-time-picker="false"
+      />
+    </div>
 
     <button
       type="submit"
@@ -64,28 +72,54 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import VueTailwindDatepicker from 'vue-tailwind-datepicker'
+import { ref, watch } from 'vue'
+import VueDatePicker from '@vuepic/vue-datepicker'
+import '@vuepic/vue-datepicker/dist/main.css'
 import { useCustomersCrud } from '@/composables/useCustomersCrud'
 import { toast } from 'vue3-toastify'
+import { useCustomersStore } from '@/stores/customersStore'
+import { formatDate } from '@/lib/formatDate'
 
-const { create } = useCustomersCrud()
+// props
+const props = defineProps(['customer'])
+
+// store
+const customersStore = useCustomersStore()
+
+const { create, update } = useCustomersCrud()
 
 // data
+const customerId = ref(0)
 const firstName = ref('')
 const lastName = ref('')
 const city = ref('')
-const birthday = ref([])
+const birthday = ref(null)
+
+// watchers
+watch(
+  () => props.customer,
+  () => {
+    customerId.value = props.customer.customerId
+    firstName.value = props.customer.firstName
+    lastName.value = props.customer.lastName
+    city.value = props.customer.city
+    birthday.value = props.customer.birthday
+  },
+  { deep: true },
+)
 
 // functions
 const notify = () => {
-  toast.success('Customer created successfully !', {
+  const message = customersStore.editMode
+    ? 'Customer updated successfully !'
+    : 'Customer created successfully !'
+  toast.success(message, {
     position: toast.POSITION.BOTTOM_CENTER,
   })
 }
 
 const notifyError = () => {
-  toast.error('Birthday is required', {
+  toast.error('Birthday is required. Example format: 17/01/2024', {
     position: toast.POSITION.BOTTOM_CENTER,
   })
 }
@@ -98,20 +132,35 @@ const clearForm = () => {
 }
 
 const onSubmit = async () => {
-  if (birthday.value.length === 0) {
+  if (birthday.value === null) {
     notifyError()
   } else {
-    try {
-      await create({
-        firstName: firstName.value,
-        lastName: lastName.value,
-        city: city.value,
-        birthday: birthday.value[0],
-      })
-      notify()
-      clearForm()
-    } catch (error) {
-      console.error(error)
+    if (customersStore.editMode) {
+      try {
+        await update(customerId.value, {
+          firstName: firstName.value,
+          lastName: lastName.value,
+          city: city.value,
+          birthday: formatDate(birthday.value), // use slice for delete hours
+        })
+        notify()
+      } catch (error) {
+        console.error(error)
+      }
+    } else {
+      // Create mode
+      try {
+        await create({
+          firstName: firstName.value,
+          lastName: lastName.value,
+          city: city.value,
+          birthday: formatDate(birthday.value),
+        })
+        notify()
+        clearForm()
+      } catch (error) {
+        console.error(error)
+      }
     }
   }
 }

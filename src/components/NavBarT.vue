@@ -10,10 +10,11 @@
       </a>
       <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
         <button
+          @click="createCustomer"
           type="button"
           class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
         >
-          <RouterLink to="/customers/new" class="nav-link">Add Customer</RouterLink>
+          Add Customer
         </button>
         <button
           data-collapse-toggle="navbar-sticky"
@@ -63,4 +64,18 @@
   </nav>
 </template>
 
-<script setup></script>
+<script setup>
+import { useCustomersStore } from '@/stores/customersStore'
+import { useRouter } from 'vue-router'
+
+// store
+const customersStore = useCustomersStore()
+
+// router
+const router = useRouter()
+
+const createCustomer = () => {
+  customersStore.setEditMode(false)
+  router.push('/customers/new')
+}
+</script>

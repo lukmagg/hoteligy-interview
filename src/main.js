@@ -7,15 +7,18 @@ import 'flowbite'
 
 // import './assets/tailwind.css'
 import './index.css'
-import VueTailwindDatepicker from 'vue-tailwind-datepicker'
+
+import VueDatePicker from '@vuepic/vue-datepicker'
+import '@vuepic/vue-datepicker/dist/main.css'
 
 import Vue3Toastify from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
 
 const app = createApp(App)
+app.component('VueDatePicker', VueDatePicker)
 
 app.use(createPinia())
-app.use(VueTailwindDatepicker)
+
 app.use(Vue3Toastify, {
   autoClose: 3000,
   style: {

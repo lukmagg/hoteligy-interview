@@ -3,9 +3,14 @@ import { defineStore } from 'pinia'
 
 export const useCustomersStore = defineStore('customers', () => {
   let customers = ref([])
+  let editMode = ref(false)
 
   function setCustomers(newCustomers) {
     customers.value.splice(0, customers.value.length, ...newCustomers)
+  }
+
+  function setEditMode(mode) {
+    editMode.value = mode
   }
 
   function deleteCustomer(id) {
@@ -16,5 +21,5 @@ export const useCustomersStore = defineStore('customers', () => {
     }
   }
 
-  return { customers, setCustomers, deleteCustomer }
+  return { customers, editMode, setCustomers, deleteCustomer, setEditMode }
 })

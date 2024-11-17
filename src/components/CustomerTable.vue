@@ -189,6 +189,7 @@ async function initTable() {
     searchQuerySeparator: ' ', // set the search query separator
     paging: false,
   })
+
   // Edit button list
   const editButtons = document.querySelectorAll('button[data-edit-id]')
   editButtons.forEach((element) => {
@@ -210,6 +211,7 @@ async function initTable() {
 }
 
 const editCustomer = (id) => {
+  customersStore.setEditMode(true)
   router.push({ name: 'customersEdit', params: { id } })
 }
 
