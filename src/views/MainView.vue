@@ -1,9 +1,9 @@
 <template>
-  <div class="container">
+  <div>
     <div>
       <NavBarT></NavBarT>
     </div>
-    <div class="content">
+    <div>
       <div>
         <RouterView></RouterView>
       </div>
@@ -16,17 +16,4 @@ import NavBarT from '../components/NavBarT.vue'
 </script>
 
 <style scoped>
-.container {
-  display: flex;
-  flex-direction: column;
-  margin: auto;
-}
-
-.content {
-  display: flex;
-  align-self: center;
-  flex: 1;
-  /* flex-direction: row; */
-  margin-top: 50px;
-}
 </style>
